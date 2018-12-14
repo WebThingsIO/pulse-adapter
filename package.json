@@ -1,0 +1,76 @@
+{
+  "name": "pulse-adapter",
+  "display_name": "Pulse",
+  "version": "0.1.0",
+  "description": "Pulse adapter plugin for Mozilla IoT Gateway",
+  "author": "Mozilla IoT",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "mozilla",
+    "iot",
+    "adapter",
+    "pulse"
+  ],
+  "homepage": "https://github.com/mozilla-iot/pulse-adapter",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mozilla-iot/pulse-adapter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mozilla-iot/pulse-adapter/issues"
+  },
+  "files": [
+    "LICENSE",
+    "SHA256SUMS",
+    "pulse-adapter.js",
+    "index.js",
+    "node_modules"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^4.19.1",
+    "eslint-plugin-html": "^5.0.0"
+  },
+  "moziot": {
+    "api": {
+      "min": 2,
+      "max": 2
+    },
+    "plugin": true,
+    "exec": "{nodeLoader} {path}",
+    "config": {
+      "pulses": []
+    },
+    "schema": {
+      "type": "object",
+      "properties": {
+        "pulses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "duration"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "duration": {
+                "type": "number"
+              },
+              "invert": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
