@@ -27,8 +27,7 @@
     "LICENSE",
     "SHA256SUMS",
     "pulse-adapter.js",
-    "index.js",
-    "node_modules"
+    "index.js"
   ],
   "dependencies": {},
   "devDependencies": {
