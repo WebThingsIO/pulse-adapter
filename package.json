@@ -61,7 +61,8 @@
                 "type": "string"
               },
               "duration": {
-                "type": "number"
+                "type": "number",
+                "description": "Duration of pulse in seconds"
               },
               "invert": {
                 "type": "boolean"
