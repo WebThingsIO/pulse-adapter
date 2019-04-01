@@ -2,7 +2,7 @@
   "name": "pulse-adapter",
   "display_name": "Pulse",
   "version": "0.1.0",
-  "description": "Pulse adapter plugin for Mozilla IoT Gateway",
+  "description": "Pulse adapter plugin for Mozilla WebThings Gateway",
   "author": "Mozilla IoT",
   "main": "index.js",
   "scripts": {
