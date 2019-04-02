@@ -9,7 +9,7 @@
 
 'use strict';
 
-const {Adapter, Database, Device, Property} = require('gateway-addon');
+const {Adapter, Database, Device, Event, Property} = require('gateway-addon');
 
 class PulseProperty extends Property {
   constructor(device, name, propertyDescr) {
@@ -38,11 +38,13 @@ class PulseProperty extends Property {
         console.log('Pulse:', this.device.name, 'set to:', this.value);
         resolve(this.value);
         this.device.notifyPropertyChanged(this);
+        this.device.notifyEvent(this);
 
         setTimeout(() => {
           this.setCachedValue(!value);
           console.log('Pulse:', this.device.name, 'set to:', this.value);
           this.device.notifyPropertyChanged(this);
+          this.device.notifyEvent(this);
         }, this.device.pulseConfig.duration * 1000);
       }
     });
@@ -81,6 +83,20 @@ class PulseDevice extends Device {
           label: 'On/Off',
           type: 'boolean',
         }));
+    this.addEvent('turnedOn', {
+      '@type': 'TurnedOnEvent',
+      description: 'Pulse transitioned from off to on',
+    });
+    this.addEvent('turnedOff', {
+      '@type': 'TurnedOffEvent',
+      description: 'Pulse transitioned from on to off',
+    });
+  }
+
+  notifyEvent(property) {
+    const eventName = property.value ? 'turnedOn' : 'turnedOff';
+    console.log(this.name, 'event:', eventName);
+    this.eventNotify(new Event(this, eventName));
   }
 }
 
