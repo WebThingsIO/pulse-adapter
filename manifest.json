@@ -1,0 +1,51 @@
+{
+  "author": "Mozilla IoT",
+  "description": "Pulse adapter plugin for Mozilla WebThings Gateway",
+  "gateway_specific_settings": {
+    "webthings": {
+      "exec": "{nodeLoader} {path}",
+      "primary_type": "adapter",
+      "strict_max_version": "*",
+      "strict_min_version": "0.10.0"
+    }
+  },
+  "homepage_url": "https://github.com/mozilla-iot/pulse-adapter",
+  "id": "pulse-adapter",
+  "license": "MPL-2.0",
+  "manifest_version": 1,
+  "name": "Pulse",
+  "options": {
+    "default": {
+      "pulses": []
+    },
+    "schema": {
+      "type": "object",
+      "properties": {
+        "pulses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "duration"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "duration": {
+                "type": "number",
+                "description": "Duration of pulse in seconds"
+              },
+              "invert": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "short_name": "Pulse",
+  "version": "0.2.0"
+}
