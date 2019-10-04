@@ -10,6 +10,7 @@
 'use strict';
 
 const {Adapter, Database, Device, Event, Property} = require('gateway-addon');
+const manifest = require('./manifest.json');
 
 class PulseProperty extends Property {
   constructor(device, name, propertyDescr) {
@@ -101,13 +102,18 @@ class PulseDevice extends Device {
 }
 
 class PulseAdapter extends Adapter {
-  constructor(addonManager, manifest) {
-    super(addonManager, manifest.name, manifest.name);
+  constructor(addonManager) {
+    super(addonManager, manifest.id, manifest.id);
     addonManager.addAdapter(this);
 
-    for (const pulseConfig of manifest.moziot.config.pulses) {
-      new PulseDevice(this, pulseConfig);
-    }
+    const db = new Database(manifest.id);
+    db.open().then(() => {
+      return db.loadConfig();
+    }).then((config) => {
+      for (const pulseConfig of config.pulses) {
+        new PulseDevice(this, pulseConfig);
+      }
+    }).catch(console.error);
   }
 
   unload() {
@@ -119,16 +125,8 @@ class PulseAdapter extends Adapter {
   }
 }
 
-function loadPulseAdapter(addonManager, manifest, _errorCallback) {
-  // Attempt to move to new config format
-  if (Database) {
-    const db = new Database(manifest.name);
-    db.open().then(() => {
-      return db.loadConfig();
-    }).then((_config) => {
-      new PulseAdapter(addonManager, manifest);
-    });
-  }
+function loadPulseAdapter(addonManager) {
+  new PulseAdapter(addonManager);
 }
 
 module.exports = loadPulseAdapter;
