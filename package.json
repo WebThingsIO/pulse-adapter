@@ -1,7 +1,7 @@
 {
   "name": "pulse-adapter",
   "display_name": "Pulse",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Pulse adapter plugin for Mozilla WebThings Gateway",
   "author": "Mozilla IoT",
   "main": "index.js",
@@ -59,14 +59,20 @@
             ],
             "properties": {
               "name": {
-                "type": "string"
+                "type": "string",
+                "description": "Name of pulse"
               },
               "duration": {
                 "type": "number",
                 "description": "Duration of pulse in seconds"
               },
               "invert": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Invert pulse such that it goes off->on, rather than on->off, after duration"
+              },
+              "extendOnRetrigger": {
+                "type": "boolean",
+                "description": "Extend the pulse if it is retriggered while active"
               }
             }
           }
