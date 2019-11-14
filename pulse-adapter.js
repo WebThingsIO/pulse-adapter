@@ -10,6 +10,7 @@
 'use strict';
 
 const {Adapter, Database, Device, Event, Property} = require('gateway-addon');
+const crypto = require('crypto');
 const manifest = require('./manifest.json');
 
 class PulseProperty extends Property {
@@ -54,8 +55,9 @@ class PulseProperty extends Property {
 
 class PulseDevice extends Device {
   constructor(adapter, pulseConfig) {
-    const id = `pulse-${pulseConfig.name}`;
-    super(adapter, id);
+    const shasum = crypto.createHash('sha1');
+    shasum.update(pulseConfig.name);
+    super(adapter, `pulse-${shasum.digest('hex')}`);
 
     this.pulseConfig = pulseConfig;
     this.name = pulseConfig.name;

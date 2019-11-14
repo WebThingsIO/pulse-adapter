@@ -1,7 +1,7 @@
 {
   "name": "pulse-adapter",
   "display_name": "Pulse",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Pulse adapter plugin for Mozilla WebThings Gateway",
   "author": "Mozilla IoT",
   "main": "index.js",
@@ -34,7 +34,7 @@
   "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^10.0.3",
-    "eslint": "^6.5.1"
+    "eslint": "^6.6.0"
   },
   "moziot": {
     "api": {
