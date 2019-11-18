@@ -17,6 +17,21 @@ class PulseProperty extends Property {
   constructor(device, name, propertyDescr) {
     super(device, name, propertyDescr);
     this.value = !!this.device.pulseConfig.invert;
+    this.onValue = !this.value;
+    this.timeout = null;
+  }
+
+  schedulePulse() {
+    if (this.timeout !== null) {
+      clearTimeout(this.timeout);
+    }
+
+    this.timeout = setTimeout(() => {
+      this.setCachedValue(!this.onValue);
+      this.device.notifyPropertyChanged(this);
+      this.device.notifyEvent(this);
+      this.timeout = null;
+    }, this.device.pulseConfig.duration * 1000);
   }
 
   /**
@@ -27,28 +42,30 @@ class PulseProperty extends Property {
    * the value passed in.
    */
   setValue(value) {
-    return new Promise((resolve, _reject) => {
-      let testCurrValue = this.value;
-      let testNewValue = value;
-      if (this.device.pulseConfig.invert) {
-        testCurrValue = !testCurrValue;
-        testNewValue = !testNewValue;
-      }
-      if (testNewValue && !testCurrValue) {
-        // Value changed from false to true - this is our trigger
-        this.setCachedValue(value);
-        console.log('Pulse:', this.device.name, 'set to:', this.value);
-        resolve(this.value);
-        this.device.notifyPropertyChanged(this);
-        this.device.notifyEvent(this);
+    return new Promise((resolve) => {
+      if (value !== this.value) {
+        // value is changing
 
-        setTimeout(() => {
-          this.setCachedValue(!value);
-          console.log('Pulse:', this.device.name, 'set to:', this.value);
-          this.device.notifyPropertyChanged(this);
-          this.device.notifyEvent(this);
-        }, this.device.pulseConfig.duration * 1000);
+        if (value === this.onValue) {
+          // if pulse was triggered, set the pulse timer
+          this.schedulePulse();
+        } else if (this.timeout !== null) {
+          // if the pulse was turned off, clear the pulse timer
+          clearTimeout(this.timeout);
+          this.timeout = null;
+        }
+
+        this.setCachedValue(value);
+        this.device.notifyEvent(this);
+      } else if (value === this.onValue &&
+                 this.device.pulseConfig.extendOnRetrigger) {
+        // if the value isn't changing, but is being re-triggered, reset the
+        // timer if configured to do so
+        this.schedulePulse();
       }
+
+      resolve(this.value);
+      this.device.notifyPropertyChanged(this);
     });
   }
 }
@@ -62,15 +79,13 @@ class PulseDevice extends Device {
     this.pulseConfig = pulseConfig;
     this.name = pulseConfig.name;
 
-    console.log('Pulse:', this.pulseConfig);
-
     this.initOnOffSwitch();
     this.adapter.handleDeviceAdded(this);
   }
 
   asDict() {
     const dict = super.asDict();
-    dict.pinConfig = this.pinConfig;
+    dict.pulseConfig = this.pulseConfig;
     return dict;
   }
 
@@ -85,7 +100,9 @@ class PulseDevice extends Device {
           '@type': 'OnOffProperty',
           label: 'On/Off',
           type: 'boolean',
-        }));
+        }
+      )
+    );
     this.addEvent('turnedOn', {
       '@type': 'TurnedOnEvent',
       description: 'Pulse transitioned from off to on',
@@ -98,7 +115,6 @@ class PulseDevice extends Device {
 
   notifyEvent(property) {
     const eventName = property.value ? 'turnedOn' : 'turnedOff';
-    console.log(this.name, 'event:', eventName);
     this.eventNotify(new Event(this, eventName));
   }
 }
