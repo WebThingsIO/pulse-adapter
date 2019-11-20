@@ -72,9 +72,7 @@ class PulseProperty extends Property {
 
 class PulseDevice extends Device {
   constructor(adapter, pulseConfig) {
-    const shasum = crypto.createHash('sha1');
-    shasum.update(pulseConfig.name);
-    super(adapter, `pulse-${shasum.digest('hex')}`);
+    super(adapter, `pulse-${pulseConfig.id}`);
 
     this.pulseConfig = pulseConfig;
     this.name = pulseConfig.name;
@@ -128,9 +126,37 @@ class PulseAdapter extends Adapter {
     db.open().then(() => {
       return db.loadConfig();
     }).then((config) => {
+      // An older version of this adapter naively used a hash of the name for
+      // the ID. Unfortunately, if the name changed, the ID also changed.
+      // However, since there are now existing devices with these IDs, use the
+      // hash first and only use random bytes if a device with that ID doesn't
+      // already exist. Oops.
+      const later = [];
+      const ids = [];
+
       for (const pulseConfig of config.pulses) {
+        if (pulseConfig.id) {
+          ids.push(pulseConfig.id);
+          new PulseDevice(this, pulseConfig);
+        } else {
+          later.push(pulseConfig);
+        }
+      }
+
+      for (const pulseConfig of later) {
+        const shasum = crypto.createHash('sha1');
+        shasum.update(pulseConfig.name);
+        let id = shasum.digest('hex');
+
+        if (ids.includes(id)) {
+          id = crypto.randomBytes(16).toString('hex');
+        }
+
+        pulseConfig.id = id;
         new PulseDevice(this, pulseConfig);
       }
+
+      return db.saveConfig(config);
     }).catch(console.error);
   }
 

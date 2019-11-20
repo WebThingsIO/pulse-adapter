@@ -34,6 +34,11 @@
                 "type": "string",
                 "description": "Name of pulse"
               },
+              "id": {
+                "type": "string",
+                "title": "ID of the pulse (will be generated for you)",
+                "readOnly": true
+              },
               "duration": {
                 "type": "number",
                 "description": "Duration of pulse in seconds"
