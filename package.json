@@ -1,19 +1,12 @@
 {
   "name": "pulse-adapter",
-  "display_name": "Pulse",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Pulse adapter plugin for Mozilla WebThings Gateway",
   "author": "Mozilla IoT",
   "main": "index.js",
   "scripts": {
     "lint": "eslint ."
   },
-  "keywords": [
-    "mozilla",
-    "iot",
-    "adapter",
-    "pulse"
-  ],
   "homepage": "https://github.com/mozilla-iot/pulse-adapter",
   "license": "MPL-2.0",
   "repository": {
@@ -34,55 +27,6 @@
   "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.4.0"
-  },
-  "moziot": {
-    "api": {
-      "min": 2,
-      "max": 2
-    },
-    "plugin": true,
-    "exec": "{nodeLoader} {path}",
-    "config": {
-      "pulses": []
-    },
-    "schema": {
-      "type": "object",
-      "properties": {
-        "pulses": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": [
-              "name",
-              "duration"
-            ],
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "Name of pulse"
-              },
-              "id": {
-                "type": "string",
-                "title": "ID of the pulse (will be generated for you)",
-                "readOnly": true
-              },
-              "duration": {
-                "type": "number",
-                "description": "Duration of pulse in seconds"
-              },
-              "invert": {
-                "type": "boolean",
-                "description": "Invert pulse such that it goes off->on, rather than on->off, after duration"
-              },
-              "extendOnRetrigger": {
-                "type": "boolean",
-                "description": "Extend the pulse if it is retriggered while active"
-              }
-            }
-          }
-        }
-      }
-    }
+    "eslint": "^7.5.0"
   }
 }
