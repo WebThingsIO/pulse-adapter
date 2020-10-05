@@ -1,20 +1,20 @@
 {
   "name": "pulse-adapter",
-  "version": "0.4.1",
-  "description": "Pulse adapter plugin for Mozilla WebThings Gateway",
-  "author": "Mozilla IoT",
+  "version": "0.4.2",
+  "description": "Pulse adapter plugin for WebThings Gateway",
+  "author": "WebThingsIO",
   "main": "index.js",
   "scripts": {
     "lint": "eslint ."
   },
-  "homepage": "https://github.com/mozilla-iot/pulse-adapter",
+  "homepage": "https://github.com/WebThingsIO/pulse-adapter",
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mozilla-iot/pulse-adapter.git"
+    "url": "https://github.com/WebThingsIO/pulse-adapter.git"
   },
   "bugs": {
-    "url": "https://github.com/mozilla-iot/pulse-adapter/issues"
+    "url": "https://github.com/WebThingsIO/pulse-adapter/issues"
   },
   "files": [
     "LICENSE",
@@ -27,6 +27,6 @@
   "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.5.0"
+    "eslint": "^7.10.0"
   }
 }
